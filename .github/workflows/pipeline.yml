@@ -32,4 +32,4 @@ jobs:
           api_key: ${{ secrets.RENDER_API_KEY }}
           service_id: ${{ secrets.RENDER_SERVICE_ID }}
           wait_deploy: false # Wait until the deploy status is successful. Warning! Free Render services can take +5 minutes to be fully deployed. Optional
-          github_deployment: false # Create a GitHub deployment. Optional
+          github_deployment: true # Create a GitHub deployment. Optional
