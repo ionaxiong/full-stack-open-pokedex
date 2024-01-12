@@ -26,6 +26,12 @@ module.exports = {
     "arrow-spacing": ["error", { before: true, after: true }],
     "no-console": "off",
     "react/prop-types": 0,
+    "cypress/no-assigning-return-values": "error",
+    "cypress/no-unnecessary-waiting": "error",
+    "cypress/assertion-before-screenshot": "warn",
+    "cypress/no-force": "warn",
+    "cypress/no-async-tests": "error",
+    "cypress/no-pause": "error",
   },
   settings: {
     react: {
