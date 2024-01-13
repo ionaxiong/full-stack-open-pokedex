@@ -1,8 +1,8 @@
 name: Health check action
 
 on:
-  schedule:
-    - cron: "2 * * * *"
+#   schedule:
+#     - cron: "2 * * * *"
   push:
     branches:
       - master
@@ -16,5 +16,5 @@ jobs:
         uses: jtalk/url-health-check-action@v3
         with:
           url: ${{ secrets.HEALTH_CHECK_URL }}
-          max-attempts: 3
-          retry-delay: 10s
+          max-attempts: 1
+        #   retry-delay: 10s
