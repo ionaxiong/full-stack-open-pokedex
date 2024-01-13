@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize, reopened]
 
 jobs:
   simple_deployment_pipeline:
@@ -28,11 +31,18 @@ jobs:
           start: npm run start-prod
           wait-on: "http://localhost:5000"
       - name: Trigger deployment to Render
-        run: curl ${{ secrets.RENDER_DEPLOY_HOOK_URL}}
+        if: github.event_name == 'push'
+        run: curl ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
 
-    #   - uses: JorgeLNJunior/render-deploy@v1.4.3
-    #     with:
-    #       api_key: ${{ secrets.RENDER_API_KEY }}
-    #       service_id: ${{ secrets.RENDER_SERVICE_ID }}
-    #       wait_deploy: false # Wait until the deploy status is successful. Warning! Free Render services can take +5 minutes to be fully deployed. Optional
-    #       github_deployment: true # Create a GitHub deployment. Optional
+  tag_realease:
+    needs: simple_deployment_pipeline
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Bump version and push tag
+        if: github.event_name == 'push'
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          PRERELEASE: true
+          DEFAULT_BUMP: patch
