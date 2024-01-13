@@ -40,7 +40,7 @@ jobs:
         if: success()
         with:
           severity: info
-          details: ${{ github.event.repository.name }} build success
+          details: build success
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
       - name: Build failure notification
         uses: rjstone/discord-webhook-notify@v1
