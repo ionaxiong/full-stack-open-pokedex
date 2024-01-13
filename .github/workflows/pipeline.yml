@@ -31,7 +31,7 @@ jobs:
           start: npm run start-prod
           wait-on: "http://localhost:5000"
       - name: Trigger deployment to Render
-        if: github.event_name == 'push' && contains(github.event.commits.*.message, 'skip')
+        if: ${{github.event_name == 'push' && contains(github.event.commits.*.message, 'skip') == false}}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
 
   a_test_job:
@@ -52,8 +52,9 @@ jobs:
         run: echo "$COMMIT_MESSAGES"
       - name: contains skip
         env:
-          SKIP: ${{ contains(github.event.commits.*.message, 'skip') }}
+          SKIP: ${{ contains(github.event.commits.*.message, 'skip') == false }}
         run: echo "$SKIP"
+
   tag_release:
     needs: simple_deployment_pipeline
     # needs: [simple_deployment_pipeline, a_test_job]
@@ -78,6 +79,10 @@ jobs:
         env:
           SKIP: ${{ contains(github.event.commits.*.message, 'skip') }}
         run: echo "$SKIP"
+      - name: not contains skip
+        env:
+          SKIP: ${{ contains(github.event.commits.*.message, 'skip') == false }}
+        run: echo "$SKIP"
       - name: push to master
         env:
           PUSH: ${{ github.event_name == 'push' }}
@@ -88,7 +93,7 @@ jobs:
         run: echo "$PUSHANDSKIP"
       - name: Bump version and push tag
         # if: github.event_name == 'push' && contains(a_test_job.outputs.COMMIT_MESSAGES, 'skip') == false
-        if: github.event_name == 'push' && contains(github.event.commits.*.message, 'skip')
+        if: github.event_name == 'push' && contains(github.event.commits.*.message, 'skip') != true
         uses: anothrNick/github-tag-action@1.64.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
