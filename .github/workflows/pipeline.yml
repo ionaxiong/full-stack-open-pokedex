@@ -78,6 +78,10 @@ jobs:
         env:
           SKIP: ${{ contains(github.event.commits.*.message, 'skip') }}
         run: echo "$SKIP"
+      - name: push to master
+        env:
+          PUSH: ${{ github.event_name == 'push' }}
+        run: echo "$PUSH"
       - name: contains skip and push to master
         env:
           PUSHANDSKIP: ${{ github.event_name == 'push' && contains(github.event.commits.*.message, 'skip') }}
