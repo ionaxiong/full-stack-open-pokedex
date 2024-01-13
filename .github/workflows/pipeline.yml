@@ -34,26 +34,26 @@ jobs:
         if: github.event_name == 'push' && contains(github.event.commits.*.message, 'skip')
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
 
-  # a_test_job:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: github context
-  #       env:
-  #         GITHUB_CONTEXT: ${{ toJson(github) }}
-  #       run: echo "$GITHUB_CONTEXT"
-  #     - name: commits
-  #       env:
-  #         COMMITS: ${{ toJson(github.event.commits) }}
-  #       run: echo "$COMMITS"
-  #     - name: commit messages
-  #       env:
-  #         COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
-  #       run: echo "$COMMIT_MESSAGES"
-  #     - name: contains skip
-  #       env:
-  #         SKIP: ${{ contains(github.event.commits.*.message, 'skip') }}
-  #       run: echo "$SKIP"
+  a_test_job:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: github context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: commits
+        env:
+          COMMITS: ${{ toJson(github.event.commits) }}
+        run: echo "$COMMITS"
+      - name: commit messages
+        env:
+          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
+        run: echo "$COMMIT_MESSAGES"
+      - name: contains skip
+        env:
+          SKIP: ${{ contains(github.event.commits.*.message, 'skip') }}
+        run: echo "$SKIP"
   tag_release:
     needs: simple_deployment_pipeline
     # needs: [simple_deployment_pipeline, a_test_job]
